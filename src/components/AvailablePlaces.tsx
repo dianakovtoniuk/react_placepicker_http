@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 
 import Places from './Places';
 import ErrorPage from './Error';
+import { sortPlacesByDistance } from '../loc';
+import { fetchAvailablePlaces } from '../http';
 import type { Place } from '../types';
 
 interface AvailablePlacesProps {
@@ -20,14 +22,17 @@ export default function AvailablePlaces({
       setIsFetching(true);
 
       try {
-        const response = await fetch('http://localhost:3000/places');
-        const resData: { places: Place[] } = await response.json();
+        const places = await fetchAvailablePlaces();
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch places');
-        }
-
-        setAvailablePlaces(resData.places);
+        navigator.geolocation.getCurrentPosition((position) => {
+          const sortedPlaces = sortPlacesByDistance(
+            places,
+            position.coords.latitude,
+            position.coords.longitude
+          );
+          setAvailablePlaces(sortedPlaces);
+          setIsFetching(false);
+        });
       } catch (error) {
         setError({
           message:
@@ -35,9 +40,8 @@ export default function AvailablePlaces({
               ? error.message
               : 'Could not fetch places, please try again later.',
         });
+        setIsFetching(false);
       }
-
-      setIsFetching(false);
     }
 
     fetchPlaces();
