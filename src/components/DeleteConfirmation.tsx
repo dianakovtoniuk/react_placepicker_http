@@ -1,10 +1,18 @@
 import { useEffect } from 'react';
 
-import ProgressBar from './ProgressBar.jsx';
+import ProgressBar from './ProgressBar';
 
 const TIMER = 3000;
 
-export default function DeleteConfirmation({ onConfirm, onCancel }) {
+interface DeleteConfirmationProps {
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+export default function DeleteConfirmation({
+  onConfirm,
+  onCancel,
+}: DeleteConfirmationProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
       onConfirm();

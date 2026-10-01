@@ -1,8 +1,15 @@
-function toRad(value) {
+import type { Place } from './types';
+
+function toRad(value: number): number {
   return (value * Math.PI) / 180;
 }
 
-function calculateDistance(lat1, lng1, lat2, lng2) {
+function calculateDistance(
+  lat1: number,
+  lng1: number,
+  lat2: number,
+  lng2: number
+): number {
   const R = 6371;
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lng2 - lng1);
@@ -17,7 +24,11 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
   return d;
 }
 
-export function sortPlacesByDistance(places, lat, lon) {
+export function sortPlacesByDistance(
+  places: Place[],
+  lat: number,
+  lon: number
+): Place[] {
   const sortedPlaces = [...places];
   sortedPlaces.sort((a, b) => {
     const distanceA = calculateDistance(lat, lon, a.lat, a.lon);
