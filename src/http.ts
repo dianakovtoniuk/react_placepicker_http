@@ -11,6 +11,17 @@ export async function fetchAvailablePlaces(): Promise<Place[]> {
   return resData.places;
 }
 
+export async function fetchUserPlaces(): Promise<Place[]> {
+  const response = await fetch('http://localhost:3000/user-places');
+  const resData: { places: Place[] } = await response.json();
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch user places');
+  }
+
+  return resData.places;
+}
+
 export async function updateUserPlaces(places: Place[]): Promise<string> {
   const response = await fetch('http://localhost:3000/user-places', {
     method: 'PUT',
